@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Video files (too large for git, host on releases or ignore)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Output
+cpr_report*.json
+cpr_demo_report.json
+annotated_*.mp4
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Model file (download separately)
+pose_landmarker_lite.task
+*.task
