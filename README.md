@@ -143,8 +143,7 @@ USB Camera → OpenCV → MediaPipe Pose (33 landmarks)
 | 住培管理系统 (软件) | 10-20万/年 | 30-50万/年 | +150% |
 | AI 评分 SaaS | 0 | 15-30万/院/年 | 全新收入 |
 
-> 目标企业: 天堰科技 (300314) / 医模科技 (300331) / 弘联医学 / 科大讯飞
-> 详见 [TARGET_COMPANIES.md](TARGET_COMPANIES.md)
+
 
 ## 📄 License
 
