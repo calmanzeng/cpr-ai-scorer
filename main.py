@@ -29,6 +29,14 @@ def main():
     parser.add_argument("--output", type=str, help="输出带标注的视频")
     parser.add_argument("--headless", action="store_true", help="无窗口模式")
     parser.add_argument("--skills-dir", type=str, default="./skills")
+    parser.add_argument("--llm", type=str, default=None,
+                        help="LLM provider: openai | deepseek | ollama | none")
+    parser.add_argument("--llm-key", type=str, default=None,
+                        help="LLM API key (or set LLM_API_KEY env var)")
+    parser.add_argument("--llm-model", type=str, default=None,
+                        help="LLM model name (default: gpt-4o-mini)")
+    parser.add_argument("--llm-url", type=str, default=None,
+                        help="Custom LLM API base URL")
     args = parser.parse_args()
     
     # 列出技能
@@ -46,17 +54,23 @@ def main():
     print(f"  技能: {args.skill}\n")
     
     # 创建 Pipeline
-    pipe = SkillPipeline(args.skill, skills_dir=args.skills_dir)
+    # LLM key: arg > env var
+    llm_key = args.llm_key or os.environ.get("LLM_API_KEY")
+    pipe = SkillPipeline(
+        args.skill, skills_dir=args.skills_dir,
+        llm_provider=args.llm, llm_api_key=llm_key,
+        llm_model=args.llm_model, llm_base_url=args.llm_url
+    )
     
     # Dashboard
     dash = Dashboard()
     
-    def render_callback(frame, metrics, landmarks, feedback, wrist_hist):
+    def render_callback(frame, metrics, landmarks, feedback, tutor_fb, wrist_hist):
         dash.tick()
         if metrics:
             ov = metrics.get("overall", {}).get("value")
             dash.update_score(ov)
-        return dash.render(frame, metrics, landmarks, feedback, wrist_hist)
+        return dash.render(frame, metrics, landmarks, feedback, tutor_fb, wrist_hist)
     
     def metrics_callback(metrics):
         ov = metrics.get("overall", {}).get("value", 0)
