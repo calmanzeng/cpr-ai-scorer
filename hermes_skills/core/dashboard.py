@@ -36,7 +36,8 @@ class Dashboard:
             self.fps_q.append(1.0 / dt)
     
     def render(self, frame, metrics: dict, landmarks: dict,
-               feedback: list, wrist_history: list) -> np.ndarray:
+               feedback: list, tutor_feedback: str = "",
+               wrist_history: list = None) -> np.ndarray:
         """渲染完整 HUD"""
         h, w = frame.shape[:2]
         px = w - self.pw
@@ -116,6 +117,32 @@ class Dashboard:
             cv2.putText(frame, fb["message"], (px + 12, y),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4, fc, 1)
             y += 18
+        
+        # ---- AI 导师 ----
+        if tutor_feedback:
+            y += 8
+            cv2.line(frame, (px + 5, y), (w - 5, y), (80, 120, 180), 1)
+            y += 12
+            cv2.putText(frame, "AI ", (px + 10, y),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, (100, 200, 255), 1)
+            # Word wrap
+            words = tutor_feedback.split()
+            line = ""
+            for word in words:
+                test = line + (" " if line else "") + word
+                # Estimate width (Chinese chars ~12px, ASCII ~7px)
+                est_w = sum(12 if ord(c) > 127 else 7 for c in test)
+                if est_w > self.pw - 20:
+                    cv2.putText(frame, line, (px + 30, y),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.38, self.COLORS["white"], 1)
+                    y += 16
+                    line = word
+                else:
+                    line = test
+            if line:
+                cv2.putText(frame, line, (px + 30, y),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.38, self.COLORS["white"], 1)
+                y += 16
         
         # ---- 趋势图 ----
         if len(self.scores_hist) > 3:
