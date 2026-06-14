@@ -1,0 +1,62 @@
+# CPR 心肺复苏技能定义
+name: cpr
+display_name: "心肺复苏 (CPR)"
+category: emergency
+exam_station: 3
+difficulty: intermediate
+version: "1.0.0"
+
+model:
+  type: mediapipe_pose
+  model_path: ""
+  num_poses: 1
+  min_detection_confidence: 0.5
+  min_tracking_confidence: 0.5
+
+landmarks:
+  - {id: 11, name: left_shoulder, type: shoulder, required: true}
+  - {id: 12, name: right_shoulder, type: shoulder, required: true}
+  - {id: 15, name: left_wrist, type: wrist, required: true}
+  - {id: 16, name: right_wrist, type: wrist, required: true}
+  - {id: 23, name: left_hip, type: hip, required: true}
+  - {id: 24, name: right_hip, type: hip, required: true}
+
+features:
+  - name: wrist_y_normalized
+    description: "手腕Y轴坐标，躯干高度归一化"
+    signal_type: periodic
+    window_seconds: 10
+
+metrics:
+  - name: compression_rate
+    display_name: "按压频率"
+    unit: "CPM"
+    target: 110
+    acceptable_range: [100, 120]
+    weight: 0.5
+  - name: rhythm_consistency
+    display_name: "节奏一致性"
+    unit: "%"
+    target: 0
+    good_threshold: 10
+    excellent_threshold: 5
+    weight: 0.3
+  - name: depth_index
+    display_name: "深度指数"
+    unit: ""
+    weight: 0.2
+
+feedback:
+  rules:
+    - {condition: "rate < 100", severity: warning, message: "按压太慢！加快速度"}
+    - {condition: "rate > 120", severity: warning, message: "按压太快！放慢速度"}
+    - {condition: "cv > 25", severity: error, message: "节奏严重不均匀"}
+    - {condition: "100 <= rate <= 120", severity: success, message: "频率正常"}
+    - {condition: "cv <= 15", severity: success, message: "节奏稳定"}
+
+data_collection:
+  enabled: true
+  privacy_level: anonymized
+  collect_features: true
+  collect_video: false
+  retention_days: 30
