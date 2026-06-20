@@ -160,4 +160,4 @@ AI导师: "按压频率109/分正常，但节奏CV达18%偏高。
 ---
 
 📧 keyneszeng@gmail.com
-🔗 https://github.com/calmanzeng/cpr-ai-scorer
+🔗 https://github.com/calmanzeng/24Skills-AI

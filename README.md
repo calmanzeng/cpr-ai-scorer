@@ -1,4 +1,4 @@
-# 🩺 执医24项 AI 评分系统 — CPR 操作评估 MVP
+# 🩺 24Skills-AI — 执医24项AI-Native智能教学评估系统
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10+-green.svg)](https://developers.google.com/mediapipe)
